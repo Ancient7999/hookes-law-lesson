@@ -385,7 +385,12 @@
 </div>
 <div class="tut-bar" id="tut-bar" hidden role="status" aria-live="polite">
   <div class="tut-main"><div class="tut-title" id="tut-title"></div><div class="tut-text" id="tut-text"></div><div class="tut-f" id="tut-f"></div></div>
-  <div class="tut-ctl"><button type="button" class="tut-btn" id="tut-skip">Skip step</button><button type="button" class="tut-btn stop" id="tut-stop">Stop</button></div>
+  <div class="tut-ctl">
+    <button type="button" class="tut-btn tut-pause" id="tut-pause" aria-pressed="false" title="Pause (Space)"><svg class="ti" viewBox="0 0 16 16" aria-hidden="true"><path class="i-pause" d="M4 2.5h2.8v11H4zM9.2 2.5H12v11H9.2z"/><path class="i-play" d="M4.5 2.3v11.4L13.2 8z"/></svg><span class="tl">Pause</span></button>
+    <label class="tut-speed"><span>Speed</span><select id="tut-speed" aria-label="Tutorial speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option><option value="3">3×</option></select></label>
+    <button type="button" class="tut-btn" id="tut-skip">Skip step</button>
+    <button type="button" class="tut-btn stop" id="tut-stop">Stop</button>
+  </div>
 </div>
 <script src="js/app.js"></script>
 </body>

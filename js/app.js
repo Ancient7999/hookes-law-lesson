@@ -2,6 +2,11 @@
 (function () {
   'use strict';
 
+  /* tutorial clock: virtual milliseconds that stop while paused and run faster at higher speed */
+  const TC = { speed: 1, paused: false, base: 0, at: performance.now() };
+  function tnow() { const n = performance.now(); if (!TC.paused) TC.base += (n - TC.at) * TC.speed; TC.at = n; return TC.base; }
+  function tcSet(o) { tnow(); Object.assign(TC, o); }
+
   /* =====================================================================
      1. CONSTANTS + HELPERS
      ===================================================================== */
@@ -1040,7 +1045,8 @@
     let raf = 0, last = 0, active = false;
     function loop(now) {
       const real = Math.min(.05, (now - last) / 1000); last = now;
-      const dt = real * .55 * st.speed;
+      const rate = tut.on ? (TC.paused ? 0 : TC.speed) : 1;   // the tutorial clock drives simulation time
+      const dt = real * .55 * st.speed * rate;
       const eq = eqOf(), mEff = 25 + st.load, w = Math.sqrt(K_P / mEff), z = .12;
       const n = Math.max(1, Math.ceil(dt / .002)), h = dt / n;
       for (let i = 0; i < n; i++) { const a = -w * w * (st.pos - eq) - 2 * z * w * st.v; st.v += a * h; st.pos += st.v * h; }
@@ -1088,8 +1094,8 @@
       const p = spotPos(M.i); tween(M, p.x, p.y, 180);
     }
     function tween(M, x, y, ms, done) {
-      const x0 = M.x, y0 = M.y, t0 = performance.now();
-      (function f(now) { const u = clamp((now - t0) / ms, 0, 1), s = u * u * (3 - 2 * u); place(M, x0 + (x - x0) * s, y0 + (y - y0) * s); if (u < 1) requestAnimationFrame(f); else if (done) done(); })(t0);
+      const x0 = M.x, y0 = M.y, t0 = tnow();
+      (function f() { const u = clamp((tnow() - t0) / ms, 0, 1), s = u * u * (3 - 2 * u); place(M, x0 + (x - x0) * s, y0 + (y - y0) * s); if (u < 1) requestAnimationFrame(f); else if (done) done(); })();
     }
     window.addEventListener('pointerup', () => {
       if (!st.drag) return;
@@ -1344,12 +1350,43 @@
        AUTOMATIC TUTORIAL — a paced demo driven by the simulation
        ================================================================= */
     const tut = { on: false, cancel: false, skip: false };
+    const btnPause = $('tut-pause'), selSpeed = $('tut-speed');
+    let pausedAnims = [];
+    function setPaused(p) {
+      tcSet({ paused: p });
+      btnPause.classList.toggle('paused', p); btnPause.setAttribute('aria-pressed', p ? 'true' : 'false');
+      btnPause.querySelector('.tl').textContent = p ? 'Resume' : 'Pause';
+      btnPause.title = p ? 'Resume (Space)' : 'Pause (Space)';
+      document.body.classList.toggle('tut-paused', p);
+      if (p) { pausedAnims = document.getAnimations().filter(a => a.playState === 'running'); pausedAnims.forEach(a => a.pause()); }
+      else { pausedAnims.forEach(a => { try { a.play(); } catch (_) { /* finished */ } }); pausedAnims = []; }
+    }
+    function resetPlayback() { setPaused(false); tcSet({ speed: 1 }); selSpeed.value = '1'; }
+    btnPause.addEventListener('click', () => { if (tut.on) setPaused(!TC.paused); });
+    selSpeed.addEventListener('change', () => { tcSet({ speed: +selSpeed.value || 1 }); });
+    document.addEventListener('keydown', e => {
+      if (!tut.on || e.code !== 'Space' || e.repeat || e.ctrlKey || e.metaKey || e.altKey) return;
+      if (e.target.closest && e.target.closest('input, select, textarea, button, a, [role="button"], [role="slider"], [tabindex]')) return;
+      e.preventDefault(); setPaused(!TC.paused);
+    });
+    function tScroll(y) {
+      return new Promise(res => {
+        const y0 = window.scrollY, t0 = tnow(), ms = Math.min(900, 250 + Math.abs(y - y0) * .5);
+        (function f() {
+          if (tut.cancel) return res();
+          let k = Math.min(1, (tnow() - t0) / ms); if (tut.skip) k = 1;
+          const e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+          window.scrollTo({ top: y0 + (y - y0) * e, behavior: 'instant' });
+          if (k < 1) requestAnimationFrame(f); else res();
+        })();
+      });
+    }
     const bar = $('tut-bar'), tTitle = $('tut-title'), tText = $('tut-text'), tF = $('tut-f'), tForm = $('tut-formula'), btnTut = $('tut-start');
     const STOP = new Error('tutorial-stop');
     function wait(ms) {
       return new Promise((res, rej) => {
-        const t0 = performance.now();
-        (function chk() { if (tut.cancel) return rej(STOP); if (tut.skip || performance.now() - t0 >= ms) return res(); setTimeout(chk, 25); })();
+        const t0 = tnow();
+        (function chk() { if (tut.cancel) return rej(STOP); if (tut.skip || tnow() - t0 >= ms) return res(); setTimeout(chk, 25); })();
       });
     }
     async function until(cond) { while (!cond()) { if (tut.cancel) throw STOP; await new Promise(r => setTimeout(r, 40)); } }
@@ -1359,7 +1396,7 @@
     async function scrollToEl(elm) {
       const r = elm.getBoundingClientRect();
       const y = window.scrollY + r.top - Math.max(70, (window.innerHeight - Math.min(r.height, window.innerHeight - 200)) / 2 - 60);
-      window.scrollTo({ top: Math.max(0, y), behavior: tut.skip ? 'auto' : 'smooth' });
+      tScroll(Math.max(0, y));
       await wait(850);
     }
     async function typeInto(inp, value, perChar) {
@@ -1445,8 +1482,8 @@
         step('Draw the best straight line', 'One straight line through the points, passing close to the origin: Hooke\'s law is verified.', '');
         line = [[X1, Y1], [X2, Y2]]; sMode = 'line'; sModeSeg.set(sModeSeg.btns[1]); renderGraph();
         const ln = G.layers.line.querySelector('line');
-        if (ln && ln.animate) { const len = Math.hypot(ln.x2.baseVal.value - ln.x1.baseVal.value, ln.y2.baseVal.value - ln.y1.baseVal.value); ln.style.strokeDasharray = len; ln.animate([{ strokeDashoffset: len }, { strokeDashoffset: 0 }], { duration: 1400, easing: 'ease-in-out' }); }
-        if (G.layers.tri.animate) G.layers.tri.animate([{ opacity: 0 }, { opacity: 0 }, { opacity: 1 }], { duration: 2200 });
+        if (ln && ln.animate) { const len = Math.hypot(ln.x2.baseVal.value - ln.x1.baseVal.value, ln.y2.baseVal.value - ln.y1.baseVal.value); ln.style.strokeDasharray = len; ln.animate([{ strokeDashoffset: len }, { strokeDashoffset: 0 }], { duration: 1400, easing: 'ease-in-out' }).playbackRate = TC.speed; }
+        if (G.layers.tri.animate) G.layers.tri.animate([{ opacity: 0 }, { opacity: 0 }, { opacity: 1 }], { duration: 2200 }).playbackRate = TC.speed;
         await wait(2400);
         step('Two points on the line', 'Read two points far apart on the line itself.', `(x₁, y₁) = (${X1} g, ${Y1} cm) · (x₂, y₂) = (${X2} g, ${Y2} cm)`);
         await wait(2800);
@@ -1471,7 +1508,7 @@
       } catch (e) {
         if (e !== STOP) throw e;
       } finally {
-        tut.on = false; tut.skip = false; st.speed = 1; reveal = null; hi(); tForm.hidden = true;
+        tut.on = false; tut.skip = false; st.speed = 1; resetPlayback(); reveal = null; hi(); tForm.hidden = true;
         masses.forEach(M => { if (M.loc === 'drag') toRack(M); });
         document.body.classList.remove('tut-on'); bar.hidden = true; btnTut.disabled = false;
         renderGraph();
