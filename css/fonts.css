@@ -1,0 +1,7 @@
+/* Self-hosted Google Fonts (latin subset): Bricolage Grotesque, Figtree, IBM Plex Mono, Patrick Hand. SIL Open Font License. */
+@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:400 800;font-display:swap;src:url(../fonts/BricolageGrotesque-var.woff2) format('woff2');}
+@font-face{font-family:'Figtree';font-style:normal;font-weight:400 800;font-display:swap;src:url(../fonts/Figtree-var.woff2) format('woff2');}
+@font-face{font-family:'Figtree';font-style:italic;font-weight:400 600;font-display:swap;src:url(../fonts/Figtree-italic.woff2) format('woff2');}
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:500;font-display:swap;src:url(../fonts/IBMPlexMono-500.woff2) format('woff2');}
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:600;font-display:swap;src:url(../fonts/IBMPlexMono-600.woff2) format('woff2');}
+@font-face{font-family:'Patrick Hand';font-style:normal;font-weight:400;font-display:swap;src:url(../fonts/PatrickHand-400.woff2) format('woff2');}

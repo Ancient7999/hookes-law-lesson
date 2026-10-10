@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hooke's Law · Spring constant</title>
+<meta name="description" content="Hooke's law practical: verify Hooke's law for a spring and find its spring constant from a graph of extension against load. Aim, theory, method, worked result, interactive graph, MCQs and an immersive practical.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23f1eff4'/%3E%3Cpath d='M16 3v4 M10 9h12 M22 9c0 2-12 2-12 4s12 2 12 4-12 2-12 4 12 2 12 4' fill='none' stroke='%235a3e85' stroke-width='1.9' stroke-linecap='round'/%3E%3Crect x='11' y='25' width='10' height='5' rx='1.4' fill='%23e0644a'/%3E%3C/svg%3E">
+<link rel="preload" href="fonts/BricolageGrotesque-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/Figtree-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+
+<div id="cursor" aria-hidden="true">
+  <svg viewBox="-20 -4 40 70" width="40" height="70"><circle class="cu-tip" cx="0" cy="0" r="2.6"/><circle class="cu-ring" cx="0" cy="0" r="6"/><path id="cu-coil" class="cu-coil" d=""/><path id="cu-hook" class="cu-hook" d=""/></svg>
+</div>
+
+<div class="app">
+  <aside class="rail" aria-label="Lesson progress">
+    <div class="rail-brand">
+      <div class="rail-eyebrow">Physics practical</div>
+      <div class="rail-title">Hooke's law</div>
+      <div class="rail-sub">the spring constant</div>
+    </div>
+    <div class="rail-body">
+      <div class="rail-spring" id="rail-spring" aria-hidden="true"><svg id="rail-svg"></svg></div>
+      <nav class="rail-nav" id="rail-nav" aria-label="Sections"></nav>
+    </div>
+  </aside>
+
+  <main class="stage" id="stage">
+    <div class="stage-top">
+      <button type="button" class="btn-prev" id="btn-prev">← Prev</button>
+    </div>
+
+    <!-- ============ AIM & OUTCOMES ============ -->
+    <section class="view" id="view-aim" data-title="Aim &amp; outcomes">
+      <div class="sheet">
+        <p class="disclaimer">This lesson is an AI-assisted introduction, not scientific-grade material. It is meant to build a working picture before the lecture and the lab session; the lab manual and the instructor take priority where they differ.</p>
+        <p class="eyebrow">Physics practical · Hooke's law</p>
+        <h1 class="page-h">Hooke's law and the spring constant</h1>
+        <div class="aim-grid">
+          <div>
+            <div class="aim-block">
+              <div class="aim-label">Aim</div>
+              <ol class="aim-list">
+                <li>To verify Hooke's law for a simple spring.</li>
+                <li>To measure the spring constant of a spring.</li>
+              </ol>
+            </div>
+            <h2 class="sub-h">Learning outcomes</h2>
+            <p class="lede">By the end of this session, students should be able to:</p>
+            <ul class="outcomes">
+              <li>Verify Hooke's law.</li>
+              <li>Measure the spring constant of a spring.</li>
+              <li>Represent data with accuracy.</li>
+            </ul>
+          </div>
+          <figure class="aim-figure">
+            <svg id="aim-hero" viewBox="0 0 300 420" role="img" aria-label="A coil spring hanging from a clamp on a ring stand, with a load bouncing gently on its end beside a ruler"></svg>
+          </figure>
+        </div>
+        <h2 class="sub-h">Why it matters in medicine</h2>
+        <div class="med-row">
+          <div class="med"><svg viewBox="0 0 80 80" aria-hidden="true" class="med-ic" id="med-ic-1"></svg><div><h3>Muscles, tendons and ligaments</h3><p>Soft tissues stretch under load and recover, much like a spring. Their stiffness shows how much force a joint can take before it is injured.</p></div></div>
+          <div class="med"><svg viewBox="0 0 80 80" aria-hidden="true" class="med-ic" id="med-ic-2"></svg><div><h3>Prosthetics and orthopaedic supports</h3><p>Artificial limbs, braces and splints use elastic parts chosen for the right stiffness, so they give support without being too rigid.</p></div></div>
+          <div class="med"><svg viewBox="0 0 80 80" aria-hidden="true" class="med-ic" id="med-ic-3"></svg><div><h3>Mechanical properties of bone</h3><p>Under small loads bone deforms elastically. Beyond its limit it deforms permanently or fractures, the same idea as a spring's elastic limit.</p></div></div>
+        </div>
+        <div class="page-end"><button type="button" class="btn-next" data-next>Next →</button></div>
+      </div>
+    </section>
+
+    <!-- ============ THEORY ============ -->
+    <section class="view" id="view-theory" data-title="Theory">
+      <div class="sheet">
+        <h1 class="page-h">Theory</h1>
+        <p class="lede">A load hung on a spring pulls it longer. <strong>Hooke's law</strong> states that, within the elastic limit, the force on a spring is directly proportional to its extension.</p>
+
+        <div class="law-card">
+          <div class="law-eq">F = k ΔL</div>
+          <p>F is the stretching force, ΔL the extension (the increase in length) and k the <strong>spring constant</strong>: the force needed for each unit of extension. A stiffer spring has a larger k.</p>
+        </div>
+
+        <div class="terms">
+          <div class="term"><div class="term-k">Load m</div><p>The mass hung on the spring. Its weight is the stretching force, F = mg.</p></div>
+          <div class="term"><div class="term-k">Extension ΔL</div><p>Pointer reading with the load minus the reading with no load.</p></div>
+          <div class="term"><div class="term-k">Spring constant k</div><p>k = F / ΔL: in N/m (SI) or dyne/cm (CGS).</p></div>
+          <div class="term"><div class="term-k">Elastic limit</div><p>The largest load after which the spring still returns to its original length.</p></div>
+        </div>
+
+        <h2 class="sub-h">Stretch a spring</h2>
+        <div class="demo">
+          <div class="demo-stage"><svg id="demo-svg" viewBox="0 0 440 460" role="img" aria-label="A spring stretched by a load, with the weight and the spring force drawn as arrows"></svg></div>
+          <div class="demo-side">
+            <div class="ctl">
+              <label for="d-m"><span>Load m</span> <output id="d-m-o">40 g</output></label>
+              <input type="range" id="d-m" min="0" max="200" step="10" value="40">
+            </div>
+            <div class="ctl"><span class="ctl-label">Spring</span>
+              <div class="seg" id="d-k" role="radiogroup" aria-label="Spring stiffness">
+                <button type="button" role="radio" aria-checked="false" data-k="7000">Soft</button>
+                <button type="button" role="radio" aria-checked="true" data-k="14000">Medium</button>
+                <button type="button" role="radio" aria-checked="false" data-k="28000">Stiff</button>
+              </div>
+            </div>
+            <div class="demo-read" id="d-read" aria-live="polite"></div>
+            <svg id="demo-fx" class="demo-fx" viewBox="0 0 320 210" role="img" aria-label="Small graph of extension against load"></svg>
+          </div>
+        </div>
+        <p class="note">Simulated with g = 980 cm/s². Above 150 g these springs pass their elastic limit.</p>
+
+        <h2 class="sub-h">From the law to a straight-line graph</h2>
+        <ol class="deriv-steps">
+          <li>The stretching force is the weight of the load:<span class="eq-line">F = m g</span></li>
+          <li>Hooke's law gives<span class="eq-line">m g = k ΔL</span></li>
+          <li>Rearranged with ΔL on its own:<span class="eq-line big">ΔL = (g / k) · m</span></li>
+        </ol>
+
+        <div class="line-card">
+          <div class="lc-eq"><span class="c-y">ΔL</span> = <span class="c-m">(g / k)</span> · <span class="c-x">m</span></div>
+          <div class="lc-eq dim"><span class="c-y">y</span> = <span class="c-m">S</span> · <span class="c-x">x</span></div>
+          <p>Plot <b class="c-y">ΔL on the y-axis</b> against <b class="c-x">m on the x-axis</b>. A straight line through the origin verifies Hooke's law. Its slope is <b class="c-m">S = g / k</b>, so</p>
+          <p class="lc-result">k = g · 1/S</p>
+        </div>
+
+        <h2 class="sub-h">Units</h2>
+        <div class="units">
+          <div class="unit-box"><div class="ub-k">SI</div><div class="ub-v">F in N, ΔL in m: k in <b>N/m</b></div></div>
+          <div class="unit-box"><div class="ub-k">CGS (used in this lab)</div><div class="ub-v">F in dyne, ΔL in cm: k in <b>dyne/cm</b></div></div>
+        </div>
+        <p class="note">1 dyne = 1 g·cm/s². With m in grams and g = 980 cm/s², mg comes out in dynes. For comparison only: 1 N/m = 1000 dyne/cm.</p>
+        <div class="page-end"><button type="button" class="btn-next" data-next>Next →</button></div>
+      </div>
+    </section>
+
+    <!-- ============ METHOD ============ -->
+    <section class="view" id="view-method" data-title="Method">
+      <div class="sheet wide">
+        <h1 class="page-h">Method</h1>
+        <h2 class="sub-h first">Apparatus</h2>
+        <div class="app-grid" id="app-grid"></div>
+
+        <h2 class="sub-h">Steps</h2>
+        <div class="method-wrap">
+          <ol class="steps" id="steps">
+            <li><button type="button" class="step" aria-pressed="true"><span class="sn">1</span><span>Set up the apparatus: hang the spring from the clamp on the ring stand, with the pointer against a vertical ruler.</span></button></li>
+            <li><button type="button" class="step"><span class="sn">2</span><span>Record the starting position of the pointer with the spring relaxed (hanger only, no slotted masses).</span></button></li>
+            <li><button type="button" class="step"><span class="sn">3</span><span>Load the hanger successively with 20, 40, 60 and 80 g.</span></button></li>
+            <li><button type="button" class="step"><span class="sn">4</span><span>After each addition, let the spring settle and read the pointer. Extension ΔL = reading − initial reading.</span></button></li>
+            <li><button type="button" class="step"><span class="sn">5</span><span>Plot ΔL (y-axis) against the load m (x-axis). A straight line through the origin verifies Hooke's law.</span></button></li>
+            <li><button type="button" class="step"><span class="sn">6</span><span>Measure the slope S of the line from two points on it.</span></button></li>
+            <li><button type="button" class="step"><span class="sn">7</span><span>Calculate the spring constant K = g · 1/S, with g = 980 cm/s².</span></button></li>
+          </ol>
+          <div class="step-view">
+            <div class="step-fig" id="step-fig"></div>
+            <p class="step-cap" id="step-cap"></p>
+          </div>
+        </div>
+
+        <aside class="tips">
+          <div class="tips-label">Good practice</div>
+          <ul>
+            <li><strong>Read at eye level.</strong> Look straight across at the pointer so the reading has no parallax error.</li>
+            <li><strong>Wait for it to settle.</strong> A new load sets the spring bouncing; read only when the pointer is still.</li>
+            <li><strong>Add masses gently.</strong> Lower each slotted mass onto the hanger rather than dropping it.</li>
+            <li><strong>Stay within the elastic limit.</strong> Too large a load stretches the spring permanently and the readings no longer follow Hooke's law.</li>
+            <li><strong>Check on the way down.</strong> Removing the masses one by one should bring the pointer back to the same readings.</li>
+          </ul>
+        </aside>
+        <div class="page-end"><button type="button" class="btn-next" data-next>Next →</button></div>
+      </div>
+    </section>
+
+    <!-- ============ FORMULA & RESULTS ============ -->
+    <section class="view" id="view-results" data-title="Formula &amp; results">
+      <div class="sheet">
+        <h1 class="page-h">Formula &amp; results</h1>
+        <div class="formula-card">
+          <div class="big-eq" aria-label="K equals g times one over S">
+            <span class="v">K</span><span class="op">=</span><span class="v">g</span><span class="op">·</span><span class="frac"><span>1</span><span class="v">S</span></span>
+          </div>
+          <dl class="legend">
+            <div><dt>K</dt><dd>spring constant, in dyne/cm</dd></div>
+            <div><dt>g</dt><dd>acceleration due to gravity, 980 cm/s²</dd></div>
+            <div><dt>S</dt><dd>slope of the ΔL (y) against m (x) graph, in cm/g</dd></div>
+            <div><dt>ΔL</dt><dd>extension = pointer reading − initial reading</dd></div>
+          </dl>
+        </div>
+
+        <h2 class="sub-h">Worked example</h2>
+        <p class="lede">Example readings for a spring with K = 14 000 dyne/cm, read to the nearest millimetre.</p>
+        <div class="table-wrap">
+          <table class="obs" id="res-table">
+            <thead><tr><th>Load m<span class="u">g</span></th><th>Pointer reading<span class="u">cm</span></th><th>Extension ΔL<span class="u">cm</span></th></tr></thead>
+            <tbody>
+              <tr><td>0</td><td>4.0</td><td>0.0</td></tr>
+              <tr><td>20</td><td>5.4</td><td>1.4</td></tr>
+              <tr><td>40</td><td>6.8</td><td>2.8</td></tr>
+              <tr><td>60</td><td>8.2</td><td>4.2</td></tr>
+              <tr><td>80</td><td>9.6</td><td>5.6</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 class="sub-h">Calculation</h2>
+        <div class="calc">
+          <div class="calc-step"><span class="cs-n">1</span><div><strong>Extension</strong> from the zero reading
+            <span class="eq-line">ΔL = reading − initial, e.g. 9.6 − 4.0 = <b>5.6 cm</b></span></div></div>
+          <div class="calc-step hi"><span class="cs-n">2</span><div><strong>Slope</strong> from two points on the line, with y = ΔL and x = m
+            <span class="eq-line">S = (y₂ − y₁) / (x₂ − x₁) = (5.6 − 1.4) / (80 − 20) = 4.2 / 60 = <b>0.07 cm/g</b></span></div></div>
+          <div class="calc-step hi conv"><span class="cs-n">3</span><div><strong>Convert g to cm/s²</strong> to match centimetres and grams
+            <span class="eq-line">g = 9.8 m/s² × 100 = <b>980 cm/s²</b></span></div></div>
+          <div class="calc-step"><span class="cs-n">4</span><div><strong>Substitute</strong>
+            <span class="eq-line">K = g · 1/S = 980 × 1/0.07 = 980 / 0.07</span></div></div>
+          <div class="calc-step result"><span class="cs-n">✓</span><div><strong>Result</strong>
+            <span class="eq-line big">Spring constant K = <b>14 000 dyne/cm</b></span>
+            <span class="sub">For comparison: 1 N/m = 1000 dyne/cm, so this is 14 N/m.</span></div></div>
+        </div>
+
+        <h2 class="sub-h">Why dyne/cm?</h2>
+        <div class="units">
+          <div class="unit-box"><div class="ub-k">g in cm/s², 1/S in g/cm</div><div class="ub-v">g · 1/S → (g·cm/s²) / cm</div></div>
+          <div class="unit-arrow" aria-hidden="true">=</div>
+          <div class="unit-box"><div class="ub-k">1 dyne = 1 g·cm/s²</div><div class="ub-v">K in <b>dyne/cm</b></div></div>
+        </div>
+
+        <div class="neutral-note">
+          <p>Real readings scatter a little: a pointer read to the nearest millimetre can be 0.05 cm out either way. Taking the slope from two points far apart on the best line keeps that error small.</p>
+        </div>
+
+        <h2 class="sub-h">Common slips</h2>
+        <div class="slips">
+          <div class="slip"><h3>Using g = 9.8</h3><p>With ΔL in cm and m in g, g must be 980 cm/s². Using 9.8 gives K = 140, which is 100 times too small.</p></div>
+          <div class="slip"><h3>Slope upside down</h3><p>ΔL is on the y-axis, so S = ΔL / Δm. Taking Δm / ΔL = 60 / 4.2 = 14.3 would give K = 68.6, far off.</p></div>
+          <div class="slip"><h3>Forgetting the zero reading</h3><p>The pointer reading is not the extension. Using 9.6 cm at 80 g instead of 5.6 cm gives K ≈ 8170 instead of 14 000.</p></div>
+          <div class="slip"><h3>Passing the elastic limit</h3><p>Overloading stretches the spring permanently. The points then curve away from the line and the zero reading shifts.</p></div>
+        </div>
+        <div class="page-end"><button type="button" class="btn-next" data-next>Next →</button></div>
+      </div>
+    </section>
+
+    <!-- ============ GRAPH ============ -->
+    <section class="view" id="view-graph" data-title="Graph">
+      <div class="sheet wide">
+        <h1 class="page-h">The ΔL against m graph</h1>
+        <p class="lede">The example readings from Formula &amp; results. Point at a reading on the graph or in the table to see its values. Drag the two round markers along the line: the slope stays the same anywhere on a straight line.</p>
+        <div class="gp-wrap">
+          <div class="graph-wrap"><svg id="g-graph" class="graph" viewBox="0 0 760 540" role="img" aria-label="Graph of extension against load with five readings"></svg></div>
+          <div class="gp-side">
+            <table class="obs small hov" id="g-table">
+              <thead><tr><th>m<span class="u">g</span></th><th>ΔL<span class="u">cm</span></th></tr></thead>
+              <tbody></tbody>
+            </table>
+            <label class="chk"><input type="checkbox" id="g-limit"> Show loads beyond the elastic limit</label>
+            <div class="g-read" id="g-read" aria-live="polite"></div>
+          </div>
+        </div>
+        <p class="note">The points beyond 150 g are illustrative: once the elastic limit is passed, the extension grows faster than the load and the line bends.</p>
+        <div class="page-end"><button type="button" class="btn-next" data-next>Next →</button></div>
+      </div>
+    </section>
+
+    <!-- ============ MCQs ============ -->
+    <section class="view" id="view-mcq" data-title="MCQs">
+      <div class="sheet">
+        <h1 class="page-h">Check understanding</h1>
+        <div class="mcq-bar">
+          <div class="mcq-score" id="mcq-score">0 correct</div>
+          <button type="button" class="btn-quiet" id="mcq-reset">Reset &amp; reshuffle</button>
+        </div>
+        <ol class="mcq-list" id="mcq-list"></ol>
+        <div class="page-end"><button type="button" class="btn-next" data-next>Next →</button></div>
+      </div>
+    </section>
+
+    <!-- ============ PRACTICAL ============ -->
+    <section class="view" id="view-practical" data-title="Practical">
+      <div class="sheet wide">
+        <h1 class="page-h">Practical</h1>
+        <div class="prac-intro">
+          <p class="lede">Take the zero-load reading first. Then drag slotted masses from the rack onto the hanger, wait for the spring to settle and record each reading. Plot ΔL against m, find the slope and calculate the spring constant.</p>
+          <button type="button" class="btn-tut" id="tut-start"><svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M6 4l10 6-10 6z" fill="currentColor"/></svg>Start tutorial</button>
+        </div>
+
+        <div class="prac">
+          <div class="rig-col">
+            <div class="rig-frame" id="rig-frame">
+              <svg id="rig" viewBox="0 0 560 740" role="img" aria-label="Front view of a coil spring hanging from a clamp on a ring stand, with a pointer against a vertical ruler, a mass hanger and a rack of numbered 20 g slotted masses"></svg>
+            </div>
+            <div class="rig-msg" id="rig-msg" aria-live="polite">The hanger is empty. Wait for the pointer to settle and record the zero-load reading first.</div>
+          </div>
+
+          <div class="prac-work">
+            <div class="panel" id="read-panel">
+              <h2 class="panel-h">Reading</h2>
+              <div class="read-row">
+                <div class="loupe-wrap"><svg id="loupe" viewBox="0 0 220 240" role="img" aria-label="Magnified view of the ruler at the pointer"></svg><div class="loupe-cap">Eye level at the pointer</div></div>
+                <div class="read-info">
+                  <div class="ri"><span class="ri-k">Load on the hanger</span><span class="ri-v" id="ri-load">0 g</span></div>
+                  <div class="ri"><span class="ri-k">Spring</span><span class="ri-v state" id="ri-state">Settled</span></div>
+                  <div class="ri"><span class="ri-k">Initial reading</span><span class="ri-v" id="ri-zero">not yet recorded</span></div>
+                </div>
+              </div>
+              <button type="button" class="btn-record" id="btn-record">Record reading for m = <span id="rec-m">0</span> g</button>
+              <p class="read-msg" id="read-msg" aria-live="polite">Masses: 8 × 20 g, numbered 1 to 8. Each one goes back only to its own numbered spot.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="prac-lower">
+          <div class="panel" id="tbl-panel">
+            <div class="panel-head">
+              <h2 class="panel-h">Observation table</h2>
+              <div class="tbl-actions">
+                <button type="button" class="btn-quiet sm" id="t-add">Add row</button>
+                <button type="button" class="btn-quiet sm" id="t-fill">Work out ΔL</button>
+              </div>
+            </div>
+            <div class="tut-formula" id="tut-formula" hidden></div>
+            <div class="table-wrap">
+              <table class="obs small edit" id="p-table">
+                <thead><tr><th>Load m<span class="u">g</span></th><th>Pointer reading<span class="u">cm</span></th><th>Extension ΔL<span class="u">cm</span></th><th><span class="sr">Remove</span></th></tr></thead>
+                <tbody id="p-tbody"></tbody>
+              </table>
+            </div>
+            <p class="tbl-msg" id="tbl-msg" aria-live="polite"></p>
+          </div>
+
+          <div class="panel" id="graph-panel">
+            <h2 class="panel-h">ΔL against m</h2>
+            <div class="seg" id="s-mode" role="radiogroup" aria-label="Slope method">
+              <button type="button" role="radio" aria-checked="true" data-mode="pick">Pick two points</button>
+              <button type="button" role="radio" aria-checked="false" data-mode="line">Drag a best-fit line</button>
+            </div>
+            <div class="graph-wrap"><svg id="p-graph" class="graph" viewBox="0 0 760 540" role="img" aria-label="Graph of extension against load from the observation table"></svg></div>
+            <p class="slope-out" id="slope-out" aria-live="polite"></p>
+          </div>
+
+          <div class="panel" id="calc-panel">
+            <h2 class="panel-h">Calculation</h2>
+            <div class="calc-rows">
+              <div class="cr" id="cr-s">
+                <label for="in-s">1. Slope S = (y₂ − y₁) / (x₂ − x₁) <span class="u">cm/g</span></label>
+                <input type="text" inputmode="decimal" id="in-s" autocomplete="off">
+                <div class="cr-sub">y = ΔL and x = m, from two points on the line</div>
+                <div class="cr-work" id="s-work"></div>
+              </div>
+              <div class="cr conv" id="cr-g">
+                <label for="in-g">2. Convert g: 9.8 m/s² = ? <span class="u">cm/s²</span></label>
+                <input type="text" inputmode="decimal" id="in-g" autocomplete="off">
+                <div class="cr-sub">1 m = 100 cm</div>
+                <div class="cr-work" id="g-work"></div>
+              </div>
+              <div class="cr" id="cr-k">
+                <label for="in-k">3. Spring constant K = g · 1/S <span class="u">dyne/cm</span></label>
+                <input type="text" inputmode="decimal" id="in-k" autocomplete="off">
+                <div class="cr-work" id="k-work"></div>
+              </div>
+            </div>
+            <div class="calc-actions">
+              <button type="button" class="btn-main" id="btn-check">Check</button>
+            </div>
+            <p class="check-msg" id="check-msg" aria-live="polite"></p>
+          </div>
+        </div>
+
+        <div class="prac-foot">
+          <button type="button" class="btn-quiet" id="btn-reset">Start over</button>
+        </div>
+
+        <div class="extras" id="extras">
+          <div class="extras-panel" id="extras-panel" role="region" aria-label="Optional extras">
+            <a href="https://grokipedia.com/page/Hooke%27s_law" target="_blank" rel="noopener">Grokipedia: Hooke's law</a>
+            <a href="https://grokipedia.com/page/Elasticity_(physics)" target="_blank" rel="noopener">Grokipedia: Elasticity (physics)</a>
+            <a href="https://www.youtube.com/watch?v=JiCFZzESQVA" target="_blank" rel="noopener">Video: Measuring a Spring Constant with Hooke's Law (Math and Physics Learning Channel)</a>
+          </div>
+          <button type="button" class="extras-toggle" id="extras-toggle" aria-expanded="false" aria-controls="extras-panel">Optional extras</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<div class="tut-bar" id="tut-bar" hidden role="status" aria-live="polite">
+  <div class="tut-main"><div class="tut-title" id="tut-title"></div><div class="tut-text" id="tut-text"></div><div class="tut-f" id="tut-f"></div></div>
+  <div class="tut-ctl"><button type="button" class="tut-btn" id="tut-skip">Skip step</button><button type="button" class="tut-btn stop" id="tut-stop">Stop</button></div>
+</div>
+<script src="js/app.js"></script>
+</body>
+</html>
