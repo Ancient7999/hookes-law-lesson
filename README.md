@@ -21,7 +21,7 @@ https://sonicunligmated.github.io/hookes-law-lesson/
 The spring has K = 12 600 dyne/cm and an empty-hanger pointer reading of 5.0 cm. Each load is integrated as a damped mass-spring system (damping ratio 0.12) until it settles; readings are rounded to 0.1 cm.
 Above about 150 g the spring passes its elastic limit: the extension grows faster than the load and the zero shifts permanently until Start over.
 Each slotted mass goes back only to its own numbered spot on the rack, and only the top mass on the hanger can be lifted.
-The tutorial button runs a paced demo (zero reading, then 20, 40, 60, 80 g → table → graph → calculation) that can be skipped step by step or stopped.
+The tutorial button runs a paced demo (zero reading, then 20, 40, 60, 80 g → table → graph → calculation) that can be paused, slowed down, stepped forward or back (Previous step / Next step, or the ← → keys) and stopped.
 
 ## Files
 
