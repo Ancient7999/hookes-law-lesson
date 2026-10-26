@@ -4,7 +4,7 @@ This README is AI-generated.
 
 Static, offline-ready lesson site for the college physics practical **Hooke's law: verifying the law for a simple spring and measuring its spring constant from a ΔL against m graph**.
 
-https://sonicunligmated.github.io/hookes-law-lesson/
+Live site: https://Ancient7999.github.io/hookes-law-lesson/
 
 ## Sections
 
